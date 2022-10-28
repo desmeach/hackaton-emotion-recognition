@@ -1,1 +1,1 @@
-# hackaton-emotion-recognition
+# hackathon-emotion-recognition
