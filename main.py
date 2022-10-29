@@ -8,7 +8,9 @@ content = dataset.iterrows()
 inputs = []
 outputs = []
 for i, row in content:
-    inputs.append(row.iloc[0])
+    temp = row.iloc[0].replace('[', '').replace(']', '').replace(' ', '').split(',')
+    res = [float(ele) for ele in temp]
+    inputs.append(res)
     outputs.append(row.iloc[1])
 inputs = np.array(inputs)
 outputs = np.array(outputs)
