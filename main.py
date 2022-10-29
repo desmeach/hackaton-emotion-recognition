@@ -1,8 +1,8 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
 import pandas as pd
 import keras as k
 import numpy as np
 from keras.layers import Dense, Activation
-from __future__ import absolute_import, division, print_function, unicode_literals
 import collections
 import tensorflow as tf
 from tensorflow.keras import layers
@@ -17,7 +17,7 @@ for i, items in accum["Data"].items():
     tmp = []
     for item in items:
         arrayFromStr = item.replace('[', '').replace(']', '').replace(' ', '').split(',')
-        tmp.append(np.array(arrayFromStr, dtype=float)[0:12])
+        tmp.append(np.array(arrayFromStr, dtype=float)[0:11])
     inputs.append(np.array(tmp))
 
 for i, items in accum["Class_label_FPG"].items():
