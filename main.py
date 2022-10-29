@@ -6,24 +6,25 @@ from patient import Patient
 
 # from keras.layers import Dense, Activation
 
-dataset = pd.read_excel("dataset/dataset_train.xlsx", skiprows=[0], usecols=[0, 2, 4, 5])
-content = dataset.iterrows()
-inputs = []
-outputs = []
-patients = set()
-presentations = []
-units = []
+df = pd.read_excel("dataset/dataset_train.xlsx")
+tmp = df.groupby('Obfuscated name').agg({'Presentation': list, 'Data': list, 'Class_label_FPG': list})
 
-for i, row in content:
-    patients.add(row.iloc[0])
+print(tmp[["Presentation", "Data"]])
 
-for i, row in content:
-    presentations = []
-    if row.iloc[0] in patients:
-        for j, rw in content:
-            pass
-
-
+# names = dataset['Obfuscated name'].items()
+# datas = dataset['Data'].items()
+# presentations = dataset['Presentation'].items()
+# names_and_pres = dict()
+# for i, name in names:
+#     for j, presentation in presentations:
+#         d_list = []
+#         for k, data_list in datas:
+#             d_list.append()
+#         names_and_pres[name] = {
+#             presentation: data_list
+#         }
+#
+# print(names_and_pres)
 # model = k.Sequential(
 #     ([
 #         Dense(40, input_dim=inputs.shape[1]),
