@@ -8,8 +8,19 @@ from patient import Patient
 
 df = pd.read_excel("dataset/dataset_train.xlsx")
 tmp = df.groupby(['Obfuscated name', 'Presentation']).agg({'Data': list, 'Class_label_FPG': list})
+accum = tmp[['Data', 'Class_label_FPG']]
+input = []
+output = []
 
-print(tmp)
+for i, items in accum["Data"].items():
+    for item in items:
+        tmp = item.replace('[', '').replace(']', '').replace(' ', '').split(',')
+        tmp = [float(elem) for elem in tmp]
+        input.append(tmp)
+
+for i, items in accum["Class_label_FPG"].items():
+    for item in items:
+        input.append(float(item))
 
 # names = dataset['Obfuscated name'].items()
 # datas = dataset['Data'].items()
