@@ -17,17 +17,26 @@ for i, items in accum["Data"].items():
     tmp = []
     for item in items:
         arrayFromStr = item.replace('[', '').replace(']', '').replace(' ', '').split(',')
-        tmp.append(np.array(arrayFromStr, dtype=float)[0:11])
-    inputs.append(np.array(tmp))
+        if (len(arrayFromStr) < 11):
+            end = [0] * (11 - len(arrayFromStr))
+            arrayFromStr[len(arrayFromStr):] = end
+        tmp.append(np.array(arrayFromStr[0:11], dtype=float))
+        tmp
+    inputs.append(tmp)
 
 for i, items in accum["Class_label_FPG"].items():
-    outputs.append(np.array(items, dtype=float)[0:11])
+    if (len(items) < 11):
+            end = [0] * (11 - len(items))
+            items[len(items):] = end
+    outputs.append(np.array(items[0:11], dtype=float))
 
-inputs = np.array(inputs, dtype=object)
-outputs = np.array(outputs, dtype=object)
+inputs = np.array(inputs)
+outputs = np.array(outputs)
 
 model = tf.keras.Sequential()
 model.add(layers.Embedding(input_dim=1000, output_dim=64))
 model.add(layers.LSTM(128))
 model.add(layers.Dense(10))
-model.summary()
+
+model.compile(optimizer="Adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+fit_results = model.fit(x=inputs.tolist(), y=outputs.tolist(), epochs=10)
