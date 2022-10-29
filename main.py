@@ -10,20 +10,14 @@ dataset = pd.read_excel("dataset/dataset_train.xlsx", skiprows=[0], usecols=[0, 
 content = dataset.iterrows()
 inputs = []
 outputs = []
-patients = set()
+patients = set(dict())
 presentations = []
 units = []
 
 for i, row in content:
     patients.add(row.iloc[0])
 
-for i, row in content:
-    presentations = []
-    if row.iloc[0] in patients:
-        for j, rw in content:
-            pass
-
-
+print(patients)
 # model = k.Sequential(
 #     ([
 #         Dense(40, input_dim=inputs.shape[1]),
