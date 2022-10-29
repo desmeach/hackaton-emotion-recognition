@@ -7,9 +7,9 @@ from patient import Patient
 # from keras.layers import Dense, Activation
 
 df = pd.read_excel("dataset/dataset_train.xlsx")
-tmp = df.groupby('Obfuscated name').agg({'Presentation': list, 'Data': list, 'Class_label_FPG': list})
+tmp = df.groupby(['Obfuscated name', 'Presentation']).agg({'Data': list, 'Class_label_FPG': list})
 
-print(tmp[["Presentation", "Data"]])
+print(tmp)
 
 # names = dataset['Obfuscated name'].items()
 # datas = dataset['Data'].items()
