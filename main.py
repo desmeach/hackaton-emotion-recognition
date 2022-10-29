@@ -16,12 +16,13 @@ for i, items in accum["Data"].items():
     tmp = []
     for item in items:
         arrayFromStr = item.replace('[', '').replace(']', '').replace(' ', '').split(',')
-        arrayFromStr = [float(elem) for elem in tmp]
+        arrayFromStr = [float(el) for el in arrayFromStr]
         tmp.append(arrayFromStr)
     input.append(tmp)
 
 for i, items in accum["Class_label_FPG"].items():
-    output.append(float(item))
+    temp = [float(elem) for elem in items]
+    output.append(temp)
 
 # names = dataset['Obfuscated name'].items()
 # datas = dataset['Data'].items()
