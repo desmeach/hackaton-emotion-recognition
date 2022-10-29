@@ -2,41 +2,61 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import pandas as pd
 import keras as k
 import numpy as np
-from keras.layers import Dense, Activation
-import collections
 import tensorflow as tf
-from tensorflow.keras import layers
 
 df = pd.read_excel("dataset/dataset_train.xlsx")
-tmp = df.groupby(['Obfuscated name', 'Presentation']).agg({'Data': list, 'Class_label_FPG': list})
-accum = tmp[['Data', 'Class_label_FPG']]
+groups = df.groupby(['Obfuscated name', 'Presentation'])
+rows = groups.agg({'Data': list, 'Class_label_FPG': list}).iterrows()
+# accum = tmp[['Data', 'Class_label_FPG']]
+
 inputs = []
 outputs = []
 
-for i, items in accum["Data"].items():
-    tmp = []
-    for item in items:
-        arrayFromStr = item.replace('[', '').replace(']', '').replace(' ', '').split(',')
-        if (len(arrayFromStr) < 11):
-            end = [0] * (11 - len(arrayFromStr))
-            arrayFromStr[len(arrayFromStr):] = end
-        tmp.append(np.array(arrayFromStr[0:11], dtype=float))
-        tmp
-    inputs.append(tmp)
+patientsDict = {}
+presentationDict = {}
 
-for i, items in accum["Class_label_FPG"].items():
-    if (len(items) < 11):
-            end = [0] * (11 - len(items))
-            items[len(items):] = end
-    outputs.append(np.array(items[0:11], dtype=float))
+for labels, row in rows:
+    if not labels[0] in patientsDict:
+        patientsDict[labels[0]] = {1: [], 2: [], 3: []}
+    datas = []
+    for data in row[0]:
+        data = data.replace('[', '').replace(']', '').replace(' ', '').split(',')
+        datas.append(data)
+    datas = np.array(datas, dtype=float)
+    row[1] = np.array(row[1], dtype=float)
+    patientsDict[labels[0]][labels[1]] = (datas, row[1])
 
-inputs = np.array(inputs)
-outputs = np.array(outputs)
+# for i, items in accum["Data"].items():
+#     tmp = []
+#     for item in items:
+#         arrayFromStr = item.replace('[', '').replace(']', '').replace(' ', '').split(',')
+#         tmp.append(np.array(arrayFromStr[0:11], dtype=float))
+#         tmp
+#     inputs.append(tmp)
+
+# for i, items in accum["Class_label_FPG"].items():
+#     outputs.append(np.array(items[0:11], dtype=float))
+
+
+inputs = patientsDict[list(patientsDict.keys())[0]][1][0]
+outputs = patientsDict[list(patientsDict.keys())[0]][1][1]
+# inputs = np.array(inputs)
+# outputs = np.array(outputs)
 
 model = tf.keras.Sequential()
-model.add(layers.Embedding(input_dim=1000, output_dim=64))
-model.add(layers.LSTM(128))
-model.add(layers.Dense(10))
+model.add(k.layers.Embedding(input_dim=1000, output_dim=64))
+model.add(k.layers.LSTM(128))
+model.add(k.layers.Dense(10))
+
+# model = tf.keras.Sequential()
+# model.add(k.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(len(inputs), 0)))
+# model.add(k.layers.MaxPooling2D((2, 2)))
+# model.add(k.layers.Conv2D(64, (3, 3), activation='relu'))
+# model.add(k.layers.MaxPooling2D((2, 2)))
+# model.add(k.layers.Conv2D(64, (3, 3), activation='relu'))
+# model.add(k.layers.Flatten())
+# model.add(k.layers.Dense(64, activation='relu'))
+# model.add(k.layers.Dense(10))
 
 model.compile(optimizer="Adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
-fit_results = model.fit(x=inputs.tolist(), y=outputs.tolist(), epochs=10)
+fit_results = model.fit(x=inputs, y=outputs, epochs=10)
