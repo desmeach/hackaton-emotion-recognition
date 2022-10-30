@@ -28,7 +28,7 @@ for labels, row in rows:
         datas.append(temp)
     datas = np.array(datas, dtype=float)
     row[1] = np.array(row[1], dtype=float)
-    patientsDict[labels[0]][labels[1]] = (datas, row[1])
+    patientsDict[labels[0]][labels[1]] = (datas, row[1][:2])
 
 # inputs = patientsDict[list(patientsDict.keys())[0]][1][0]
 # outputs = patientsDict[list(patientsDict.keys())[0]][1][1]
@@ -38,13 +38,13 @@ outputs = []
 for key in list(patientsDict.keys()):
     for presentation in patientsDict[key]:
         if len(patientsDict[key][presentation]) > 0:
-            inputs.append(patientsDict[key][presentation][0])
+            inputs.append(patientsDict[key][presentation][0][:2])
             outputs.append(patientsDict[key][presentation][1])
 
-# inputs = tf.stack(inputs)
-# outputs = tf.stack(outputs)
+inputs = tf.stack(inputs)
+outputs = tf.stack(outputs)
 print(inputs)
-# print(outputs)
+print(outputs)
 #
 # model = Sequential()
 # model.add(LSTM(100, input_shape=(2, 240), return_sequences=True))
