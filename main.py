@@ -7,9 +7,11 @@ import numpy as np
 import tensorflow as tf
 from sklearn import preprocessing
 
+
 df = pd.read_excel("dataset/dataset_train.xlsx")
 groups = df.groupby(['Obfuscated name', 'Presentation'])
 rows = groups.agg({'Data': list, 'Class_label_FPG': list}).iterrows()
+
 
 inputs = []
 outputs = []
@@ -45,6 +47,7 @@ inputs = tf.stack(inputs)
 print(outputs[0])
 print(inputs[0])
 # model = Sequential(
+
 #     ([
 #         Dense(40, 'relu', input_shape=outputs[0].shape),
 #         Dense(20, 'softmax'),
